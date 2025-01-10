@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const userRoutes = require("./Admin_Module/routes/userRoutes");
+const adminRoutes = require("./Admin_Module/routes/index.js");
 require("dotenv").config();
 
 mongoose
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes
-app.use("/api/users", userRoutes);
+app.use("/admin", adminRoutes);
 
 // Start Server
 const port = process.env.PORT;
