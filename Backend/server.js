@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const adminRoutes = require("./Admin_Module/routes/index.js");
+const recruiterRoutes = require("./Recruiter_Module/routes/index-R.js");
 require("dotenv").config();
 
 mongoose
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use("/admin", adminRoutes);
+app.use("/recruiter", recruiterRoutes);
 
 // Start Server
 const port = process.env.PORT;
