@@ -33,15 +33,16 @@ exports.getJobById = async (req, res) => {
 };
 
 exports.updateJob = async (req, res) => {
+  console.log(req.body);
   try {
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!job) {
-      res.status(404).json({ message: "Job not found" });
-    } else {
-      res.json(job);
-    }
+    const jobId = req.params.id;
+    const update = {
+      title: req.body.title,
+      description: req.body.description,
+      requirements: req.body.requirements,
+    };
+    const job = await Job.findByIdAndUpdate(jobId, update, { new: true });
+    res.json(job);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -49,7 +50,7 @@ exports.updateJob = async (req, res) => {
 
 exports.deleteJob = async (req, res) => {
   try {
-    await Job.findByIdAndRemove(req.params.id);
+    await Job.findByIdAndDelete(req.params.id);
     res.json({ message: "Job deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
