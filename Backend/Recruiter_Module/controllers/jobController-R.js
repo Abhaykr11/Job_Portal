@@ -2,7 +2,8 @@ const Job = require(__dirname + "/../models/jobModel-R.js");
 
 exports.createJob = async (req, res) => {
   try {
-    const job = new Job(req.body);
+    const { title, description, requirements } = req.body;
+    const job = new Job({ title, description, requirements, tags: [] });
     await job.save();
     res.status(201).json(job);
   } catch (err) {
