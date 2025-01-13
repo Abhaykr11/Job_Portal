@@ -27,17 +27,14 @@ exports.getApplicationById = async (req, res) => {
 };
 
 exports.createApplication = async (req, res) => {
-  console.log("Create application function called");
-  console.log(req.body);
-  const { jobId, candidateId, resume, coverLetter } = req.body;
-  const application = new Application({
-    jobId,
-    candidateId,
-    resume,
-    coverLetter,
-  });
-  await application.save();
-  res.status(201).json(application);
+  try {
+    const application = new Application(req.body);
+    await application.save();
+    res.status(201).json(application);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Validation failed" });
+  }
 };
 
 exports.updateApplicationStatus = async (req, res) => {
