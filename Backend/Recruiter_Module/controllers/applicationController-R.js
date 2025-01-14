@@ -2,34 +2,60 @@ const Application = require("../models/applicationModel");
 
 exports.getApplications = async (req, res) => {
   try {
-    const applications = await Application.find()
-      .populate("jobId")
-      .populate("candidateId");
-    res.json(applications);
+    console.log("Reached getApplications endpoint");
+    const applications = await Application.find();
+    console.log("Applications found:", applications);
+    if (!applications) {
+      res.status(404).json({ message: "No applications found" });
+    } else {
+      res.json(applications);
+    }
   } catch (err) {
+    console.error("Error getting applications:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.getApplicationById = async (req, res) => {
   try {
-    const application = await Application.findById(req.params.id)
-      .populate("jobId")
-      .populate("candidateId");
+    console.log("Reached getApplicationById endpoint");
+    console.log("Req params ID:", req.params.id);
+    const application = await Application.findById(req.params.id);
+    console.log("Application found:", application);
     if (!application) {
       res.status(404).json({ message: "Application not found" });
     } else {
       res.json(application);
     }
   } catch (err) {
+    console.error("Error getting application:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// exports.createApplication = async (req, res) => {
+//   try {
+//     const application = new Application(req.body);
+//     await application.save();
+//     console.log("Application saved:", application);
+//     res.status(201).json(application);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(400).json({ message: "Validation failed" });
+//   }
+// };
+
 exports.createApplication = async (req, res) => {
   try {
-    const application = new Application(req.body);
+    const application = new Application({
+      jobId: req.body.jobId,
+      candidateId: req.body.candidateId,
+      resume: req.body.resume,
+      coverLetter: req.body.coverLetter,
+      status: "applied",
+    });
     await application.save();
+    console.log("Application saved:", application);
     res.status(201).json(application);
   } catch (err) {
     console.error(err);
