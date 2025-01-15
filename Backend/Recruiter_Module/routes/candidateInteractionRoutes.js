@@ -12,3 +12,24 @@
 // );
 
 // module.exports = router;
+const express = require("express");
+const router = express.Router();
+const candidateInteractionController = require(__dirname +
+  "/../controllers/candidateInteractionController.js");
+
+router.post(
+  "/:applicationId/send-interview-invitation",
+  candidateInteractionController.sendInterviewInvitation
+);
+
+router.post(
+  "/:applicationId/provide-feedback",
+  candidateInteractionController.provideFeedback
+);
+
+router.get(
+  "/:applicationId/interactions",
+  candidateInteractionController.getCandidateInteractions
+);
+
+module.exports = router;

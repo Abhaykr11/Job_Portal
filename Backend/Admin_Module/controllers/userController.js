@@ -1,8 +1,10 @@
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 exports.createUser = async (req, res) => {
   try {
-    const user = new User(req.body);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = new User({ ...req.body, password: hashedPassword });
     await user.save();
     res.status(201).json(user);
   } catch (err) {
@@ -33,6 +35,10 @@ exports.getUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
+    if (req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      req.body.password = hashedPassword;
+    }
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

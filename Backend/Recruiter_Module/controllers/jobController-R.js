@@ -1,16 +1,5 @@
 const Job = require(__dirname + "/../models/jobModel-R.js");
 
-exports.createJob = async (req, res) => {
-  try {
-    const { title, description, requirements } = req.body;
-    const job = new Job({ title, description, requirements, tags: [] });
-    await job.save();
-    res.status(201).json(job);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
 exports.getJobs = async (req, res) => {
   try {
     const jobs = await Job.find();
@@ -22,7 +11,8 @@ exports.getJobs = async (req, res) => {
 
 exports.getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
     if (!job) {
       res.status(404).json({ message: "Job not found" });
     } else {
@@ -33,16 +23,37 @@ exports.getJobById = async (req, res) => {
   }
 };
 
-exports.updateJob = async (req, res) => {
-  console.log(req.body);
+exports.createJob = async (req, res) => {
   try {
-    const jobId = req.params.id;
-    const update = {
+    const job = new Job({
       title: req.body.title,
       description: req.body.description,
       requirements: req.body.requirements,
-    };
-    const job = await Job.findByIdAndUpdate(jobId, update, { new: true });
+      tags: req.body.tags,
+      categories: req.body.categories,
+      applicationDeadline: req.body.applicationDeadline,
+      visibility: req.body.visibility,
+    });
+    await job.save();
+    res.status(201).json(job);
+  } catch (err) {
+    console.error(err); // Log the error
+    if (err.name === "ValidationError") {
+      res
+        .status(400)
+        .json({ message: "Validation failed", errors: err.errors });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+exports.updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findByIdAndUpdate(jobId, req.body, {
+      new: true,
+    });
     res.json(job);
   } catch (err) {
     res.status(500).json({ message: err.message });

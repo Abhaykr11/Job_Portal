@@ -33,18 +33,6 @@ exports.getApplicationById = async (req, res) => {
   }
 };
 
-// exports.createApplication = async (req, res) => {
-//   try {
-//     const application = new Application(req.body);
-//     await application.save();
-//     console.log("Application saved:", application);
-//     res.status(201).json(application);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(400).json({ message: "Validation failed" });
-//   }
-// };
-
 exports.createApplication = async (req, res) => {
   try {
     const application = new Application({
@@ -106,11 +94,6 @@ exports.sendInterviewInvitation = async (req, res) => {
       subject: "Interview Invitation",
       text: `Dear ${application.candidateName},\n\nYou are invited for an interview on ${interviewDetails.interviewDate} at ${interviewDetails.interviewTime}.\n\nBest regards,\n${interviewDetails.interviewerName}`,
     };
-
-    // Use a mail service to send the email
-    // For example, using Nodemailer:
-    // const transporter = nodemailer.createTransport({ /* mail service config */ });
-    // await transporter.sendMail(mailOptions);
 
     res.json({ message: "Interview invitation sent successfully" });
   } catch (error) {

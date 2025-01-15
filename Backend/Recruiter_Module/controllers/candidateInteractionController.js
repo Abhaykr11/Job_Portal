@@ -1,42 +1,137 @@
-// const CandidateInteraction = require("../models/candidateInteractionModel");
-
 // exports.sendInterviewInvitation = async (req, res) => {
 //   try {
-//     const applicationId = req.params.id;
-//     const interviewInvitation = {
-//       interviewDate: req.body.interviewDate,
-//       interviewTime: req.body.interviewTime,
-//       interviewLocation: req.body.interviewLocation,
-//     };
-//     const candidateInteraction = new CandidateInteraction({
+//     const applicationId = req.params.applicationId;
+//     const interactionDetails = req.body;
+
+//     const interaction = new CandidateInteraction({
 //       applicationId,
-//       interviewInvitation,
+//       interactionType: "interview_invitation",
+//       message: interactionDetails.message,
+//       sender: interactionDetails.sender,
+//       receiver: interactionDetails.receiver,
 //     });
-//     await candidateInteraction.save();
-//     res.json({ message: "Interview invitation sent successfully" });
+
+//     await interaction.save();
+//     res.status(201).json(interaction);
 //   } catch (err) {
 //     console.error(err);
-//     res.status(500).json({ message: "Error sending interview invitation" });
+//     res.status(400).json({ message: "Validation failed" });
 //   }
 // };
 
 // exports.provideFeedback = async (req, res) => {
 //   try {
-//     const applicationId = req.params.id;
-//     const feedback = req.body.feedback;
-//     const candidateInteraction = await CandidateInteraction.findOneAndUpdate(
-//       { applicationId },
-//       { feedback },
-//       { new: true }
-//     );
-//     if (!candidateInteraction) {
-//       return res
-//         .status(404)
-//         .json({ message: "Candidate interaction not found" });
-//     }
-//     res.json({ message: "Feedback provided successfully" });
+//     const applicationId = req.params.applicationId;
+//     const interactionDetails = req.body;
+
+//     const interaction = new CandidateInteraction({
+//       applicationId,
+//       interactionType: "feedback",
+//       message: interactionDetails.message,
+//       sender: interactionDetails.sender,
+//       receiver: interactionDetails.receiver,
+//     });
+
+//     await interaction.save();
+//     res.status(201).json(interaction);
 //   } catch (err) {
 //     console.error(err);
-//     res.status(500).json({ message: "Error providing feedback" });
+//     res.status(400).json({ message: "Validation failed" });
 //   }
 // };
+
+// exports.getCandidateInteractions = async (req, res) => {
+//   try {
+//     const applicationId = req.params.applicationId;
+//     const interactions = await CandidateInteraction.find({ applicationId });
+//     res.json(interactions);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+const CandidateInteraction = require("../models/candidateInteractionModel");
+exports.sendInterviewInvitation = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId;
+    const interactionDetails = req.body;
+
+    if (
+      !interactionDetails.message ||
+      !interactionDetails.sender ||
+      !interactionDetails.receiver
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Message, sender, and receiver are required" });
+    }
+
+    const interaction = new CandidateInteraction({
+      applicationId,
+      interactionType: "interview_invitation",
+      message: interactionDetails.message,
+      sender: interactionDetails.sender,
+      receiver: interactionDetails.receiver,
+    });
+
+    await interaction.save();
+    res.status(201).json(interaction);
+  } catch (err) {
+    console.error(err);
+    if (err.name === "ValidationError") {
+      res
+        .status(400)
+        .json({ message: "Validation failed", errors: err.errors });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+exports.provideFeedback = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId;
+    const interactionDetails = req.body;
+
+    if (
+      !interactionDetails.message ||
+      !interactionDetails.sender ||
+      !interactionDetails.receiver
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Message, sender, and receiver are required" });
+    }
+
+    const interaction = new CandidateInteraction({
+      applicationId,
+      interactionType: "feedback",
+      message: interactionDetails.message,
+      sender: interactionDetails.sender,
+      receiver: interactionDetails.receiver,
+    });
+
+    await interaction.save();
+    res.status(201).json(interaction);
+  } catch (err) {
+    console.error(err);
+    if (err.name === "ValidationError") {
+      res
+        .status(400)
+        .json({ message: "Validation failed", errors: err.errors });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+exports.getCandidateInteractions = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId;
+    const interactions = await CandidateInteraction.find({ applicationId });
+    res.json(interactions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
