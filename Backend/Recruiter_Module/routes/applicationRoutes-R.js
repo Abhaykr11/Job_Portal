@@ -9,5 +9,9 @@ router.post("/", applicationController.createApplication);
 // router.patch("/:id/status", applicationController.updateApplicationStatus);
 router.patch("/:id", applicationController.updateApplicationStatus);
 router.delete("/:id", applicationController.deleteApplication);
+router.post(
+  "/:id/send-interview-invitation",
+  applicationController.sendInterviewInvitation
+);
 
 module.exports = router;

@@ -86,3 +86,35 @@ exports.deleteApplication = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.sendInterviewInvitation = async (req, res) => {
+  try {
+    const applicationId = req.params.id;
+    const application = await Application.findById(applicationId);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const interviewDetails = req.body;
+    const candidateEmail = application.candidateEmail;
+
+    // Send interview invitation email using a mail service like Nodemailer
+    const mailOptions = {
+      from: "navnithbhat007@gmail.com",
+      to: candidateEmail,
+      subject: "Interview Invitation",
+      text: `Dear ${application.candidateName},\n\nYou are invited for an interview on ${interviewDetails.interviewDate} at ${interviewDetails.interviewTime}.\n\nBest regards,\n${interviewDetails.interviewerName}`,
+    };
+
+    // Use a mail service to send the email
+    // For example, using Nodemailer:
+    // const transporter = nodemailer.createTransport({ /* mail service config */ });
+    // await transporter.sendMail(mailOptions);
+
+    res.json({ message: "Interview invitation sent successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error sending interview invitation" });
+  }
+};
