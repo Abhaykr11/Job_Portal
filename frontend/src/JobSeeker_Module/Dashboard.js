@@ -25,13 +25,17 @@ function JobSeekerDashboard() {
               View Profile
             </button>
             </Link>
-            
+
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Job Search</h2>
+
+            <Link to="search-job">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Search Jobs
             </button>
+            </Link>
+            
             <div className="h-10"></div>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Saved Jobs
@@ -43,23 +47,31 @@ function JobSeekerDashboard() {
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Resume Management</h2>
+
+            <Link to="upload-resume">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Upload Resume
             </button>
+            </Link>
+
             <div className="h-10"></div>
+            <Link to="edit-resume">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Edit Resume
             </button>
+            </Link>
+
             <div className="h-10"></div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Generate CV
-            </button>
+            
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Application Tracking</h2>
+
+            <Link to="application-status">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               View Application Status
             </button>
+            </Link>
           </div>
         </div>
       </main>
