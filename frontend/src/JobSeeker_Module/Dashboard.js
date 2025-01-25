@@ -1,5 +1,6 @@
 import React from 'react';
 import '../style.css';
+import { Link } from 'react-router-dom';
 
 function JobSeekerDashboard() {
   return (
@@ -11,13 +12,20 @@ function JobSeekerDashboard() {
         <div className="grid grid-rows-4 gap-4">
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Profile Management</h2>
+
+            <Link to="create-profile">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Create/Edit Profile
             </button>
+            </Link>
+
+            <Link to="view-profile">
             <div className="h-10"></div>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               View Profile
             </button>
+            </Link>
+            
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Job Search</h2>
