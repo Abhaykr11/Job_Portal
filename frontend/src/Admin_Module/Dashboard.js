@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import CreateUser from './UserManagement/CreateUser';
 import '../style.css';
 
 function AdminDashboard() {
@@ -25,27 +24,31 @@ function AdminDashboard() {
             </button>
             </Link>
             
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
-              Manage Roles
-            </button>
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Job Management</h2>
+
+            <Link to="create-job">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Create Job Posting
             </button>
+           </Link>
+
+           <Link to="manage-job">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
               Manage Job Postings
             </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
-              Manage Job Categories
-            </button>
+            </Link> 
           </div>
+          
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">System Settings</h2>
+
+            <Link to="system-setting">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               System Settings
             </button>
+            </Link>
           </div>
         </div>
       </main>
