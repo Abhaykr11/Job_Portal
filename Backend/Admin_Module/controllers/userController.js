@@ -58,4 +58,20 @@ exports.deleteUser = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  exports.login = async (req, res) => {
+    try {
+      const { email, password, role } = req.body;
+      const user = await User.findOne({ email, role });
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or role" });
+      }
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
 };
