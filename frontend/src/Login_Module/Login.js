@@ -1,105 +1,88 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-// import bcrypt from 'bcryptjs';
-import { Link, useNavigate } from 'react-router-dom';
-import '../style.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loginStatus, setLoginStatus] = useState(null);
+  const [consoleOutput, setConsoleOutput] = useState("");
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
-  const [errors, setErrors] = useState({});
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log('Login attempt with:', email, password, role);
-
-    if (!email || !password || !role) {
-      setErrors({ ...errors, email: 'Please fill in all fields' });
-      return;
-    }
-
-    try {
-      const response = await axios.post('/admin/users', {
-        email,
-        password,
-        role,
+  useEffect(() => {
+    fetch("/admin/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data);
+        setConsoleOutput(JSON.stringify(data, null, 2));
       });
-      console.log('Response:', response);
-      const user = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      if (user.role === 'Admin') {
-        navigate('/admin/dashboard', { replace: true });
-      } else if (user.role === 'Recruiter') {
-        navigate('/recruiter/dashboard', { replace: true });
-      } else if (user.role === 'Job Seeker') {
-        navigate('/jobseeker/dashboard', { replace: true });
+  }, []);
+
+  const handleLogin = () => {
+    if (email && password && role) {
+      const user = users.find(
+        (user) =>
+          user.email === email &&
+          user.password === password &&
+          user.role === role
+      );
+      if (user) {
+        setLoginStatus(true);
+        setConsoleOutput(
+          `Login successful! User: ${JSON.stringify(user, null, 2)}`
+        );
+        if (role === "Admin") {
+          navigate("/admin/dashboard");
+        } else if (role === "Job Seeker") {
+          navigate("/job-seeker/dashboard");
+        } else if (role === "Recruiter") {
+          navigate("/recruiter/dashboard");
+        }
+      } else {
+        setLoginStatus(false);
+        setConsoleOutput("Login failed!");
       }
-    } catch (error) {
-      console.error('API request failed', error);
-      setErrors({ ...errors, password: 'Invalid password' });
+    } else {
+      setConsoleOutput("Please enter all fields!");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-10 rounded shadow-md w-1/2">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              id="password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
-              Role
-            </label>
-            <select
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              id="role"
-              value={role}
-              onChange={(event) => setRole(event.target.value)}
-            >
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="Recruiter">Recruiter</option>
-              <option value="Job Seeker">Job Seeker</option>
-            </select>
-          </div>
-          <button
-            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Login
-          </button>
-          <p className="text-sm text-gray-700 mt-4">
-            Don't have an account? <Link to="register">Register</Link>
-          </p>
-        </form>
-      </div>
+    <div>
+      <h1>Login Page</h1>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <br />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <br />
+      <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <option value="">Select Role</option>
+        <option value="Admin">Admin</option>
+        <option value="Job Seeker">Job Seeker</option>
+        <option value="Recruiter">Recruiter</option>
+      </select>
+      <br />
+      <button onClick={handleLogin}>Login</button>
+      <br />
+      {loginStatus === true ? (
+        <p>Login Successful!</p>
+      ) : loginStatus === false ? (
+        <p>Login Failed!</p>
+      ) : (
+        <></>
+      )}
+      <h2>Console Output:</h2>
+      <pre>{consoleOutput}</pre>
     </div>
   );
 }
