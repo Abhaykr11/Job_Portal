@@ -11,7 +11,7 @@ function LoginModule() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="register" element={<Register />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="/job-seeker/dashboard" element={<JobSeekerDashboard />} />
       <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />

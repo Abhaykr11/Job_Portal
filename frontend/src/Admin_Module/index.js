@@ -10,7 +10,7 @@ import Setting from  './SystemSettings/Settings.js'
 function AdminModule() {
   return (
     <Routes>
-      <Route index element={<AdminDashboard />} />
+      <Route path="/" element={<AdminDashboard />} />
       <Route path="create-user" element={<CreateUser />} />
       <Route path="manage-user" element={<ManageUser />} />
       <Route path="create-job" element={< CreateJob />} />
