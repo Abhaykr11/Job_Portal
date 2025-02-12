@@ -21,13 +21,12 @@ function RecruiterDashboard() {
             </Link>
 
             <div className="h-10"></div>
+            <Link to="manage-job">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Manage Job Postings
             </button>
-            <div className="h-10"></div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Set Application Deadlines
-            </button>
+            </Link>
+            
           </div>
           <div className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Application Management</h2>
